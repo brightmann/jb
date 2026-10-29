@@ -108,7 +108,6 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
         date,
         noBg,
       },
-      revalidate: 10,
     }
   } catch (err) {
     console.error('page error', domain, rawPageId, err)
@@ -138,7 +137,7 @@ export async function getStaticPaths() {
       },
     })),
     // paths: [],
-    fallback: true,
+    fallback: false,
   }
 
   return staticPaths

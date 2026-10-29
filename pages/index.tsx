@@ -93,7 +93,7 @@ export const getStaticProps = async () => {
 
     props.postList = postList
 
-    return { props, revalidate: 10 }
+    return { props }
   } catch (err) {
     console.error('page error', domain, err)
 

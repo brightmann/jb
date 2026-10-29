@@ -120,6 +120,20 @@ export const NotionPage: React.FC<
     return mapPageUrl(site, recordMap)
   }, [site, recordMap])
 
+  // react-notion-x crashes (uuidToId(undefined)) on blocks whose record has
+  // no id — e.g. tombstone records Notion returns for deleted blocks. They
+  // can't render anyway, so drop them before rendering. (A missing block
+  // lookup already renders as null; only an id-less value crashes.)
+  const safeRecordMap = React.useMemo(() => {
+    if (!recordMap?.block) return recordMap
+    const block = Object.fromEntries(
+      Object.entries(recordMap.block).filter(
+        ([, entry]: any) => entry?.value?.id
+      )
+    )
+    return { ...recordMap, block }
+  }, [recordMap])
+
   if (router.isFallback) {
     return <Loading fullscreen />
   }
@@ -133,7 +147,7 @@ export const NotionPage: React.FC<
       <div className='flex flex-col lg:gap-4 max-w-[100vw] overflow-hidden lg:max-w-3xl w-full'>
         <NotionRenderer
           components={components}
-          recordMap={recordMap as any}
+          recordMap={safeRecordMap as any}
           rootPageId={site.rootNotionPageId}
           rootDomain={site.domain}
           previewImages={!!recordMap.preview_images}

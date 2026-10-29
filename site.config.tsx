@@ -17,7 +17,7 @@ const config = {
 
   // basic site info (required)
   name: 'Anti-Involutionist',
-  domain: 'www.jerrykjia.com',
+  domain: 'jb.luckypoem.workers.dev',
   author: 'Jerry K Jia',
   yearStarted: 2022,
 

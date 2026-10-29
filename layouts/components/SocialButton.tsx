@@ -2,7 +2,6 @@ import {
   RiGithubFill,
   RiLinkedinBoxFill,
   RiMailFill,
-  RiRssFill,
   RiTelegramFill,
 } from 'react-icons/ri'
 /**
@@ -54,9 +53,6 @@ const SocialButton = ({ config }) => {
           <RiMailFill className='transform hover:scale-125 duration-150 hover-text-primary' />
         </a>
       )}
-      <a target='_blank' rel='noreferrer' title={'RSS'} href={'/feed'}>
-        <RiRssFill className='transform hover:scale-125 duration-150 hover-text-primary' />
-      </a>
     </div>
   )
 }
