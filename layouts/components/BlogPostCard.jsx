@@ -70,7 +70,6 @@ const BlogPostCard = ({
         <Image
           src={coverImage.src}
           alt={title}
-          blurDataURL={coverImage.dataURIBase64}
           layout='fill'
           objectFit='cover'
           priority={index < 3 ? true : false}

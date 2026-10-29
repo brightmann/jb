@@ -40,8 +40,6 @@ export function Layout({
 
   coverImage?: {
     src: string
-    dataURIBase64?: string
-    blurDataURL?: string
   }
 
   noPadding?: boolean

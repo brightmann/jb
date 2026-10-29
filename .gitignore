@@ -47,3 +47,5 @@ cache.json
 # misc
 robots.txt
 sitemap.xml
+
+tsconfig.tsbuildinfo

@@ -27,23 +27,14 @@ function Header({
   tags,
   description,
 }: {
-  coverImage?:
-    | {
-        src: string
-        dataURIBase64?: string
-        blurDataURL?: string
-      }
-    | string
+  coverImage?: { src: string } | string
   title?: string
   description?: string
   date?: string
   tags?: string[]
 }) {
-  const {
-    src,
-    dataURIBase64 = undefined,
-    blurDataURL = undefined,
-  } = typeof coverImage === 'object' ? coverImage : { src: coverImage }
+  const { src } =
+    typeof coverImage === 'object' ? coverImage : { src: coverImage }
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
@@ -53,7 +44,6 @@ function Header({
       <Image
         src={src}
         alt='Page cover image'
-        blurDataURL={blurDataURL || dataURIBase64}
         layout='fill'
         objectFit='cover'
         priority
