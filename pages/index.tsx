@@ -79,7 +79,7 @@ export const getStaticProps = async () => {
           title,
           icon,
           coverImage,
-          tags: tags.map((t) => ({
+          tags: (tags ?? []).map((t) => ({
             name: t,
             color: tagColorMap[t],
           })),
