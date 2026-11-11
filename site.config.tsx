@@ -7,7 +7,7 @@ const config = {
 
   // Blog
   rootNotionPageId: '40c63c580eea80a2993cf698cbbd9091',
-  postsCollectionId: '40c63c580eea800089ffd673717e9830',
+  postsCollectionId: '40c63c580eea808bbcb1000b9adf6d60',
   // Test Suite
   // rootNotionPageId: '067dd719a912471ea9a3ac10710e7fdf',
 
