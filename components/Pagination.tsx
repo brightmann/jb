@@ -35,7 +35,7 @@ export default function Pagination({
     'px-3 py-1.5 rounded-md text-sm transition-colors duration-200'
   const linkCls = `${base} text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700`
   const currentCls = `${base} bg-primary-500 text-white font-semibold`
-  const disabledCls = `${base} text-gray-300 dark:text-gray-600 cursor-default`
+  const disabledCls = `${base} text-gray-400 dark:text-gray-500 cursor-default`
 
   return (
     <nav

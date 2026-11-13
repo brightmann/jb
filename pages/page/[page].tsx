@@ -61,15 +61,17 @@ export default function PaginatedPage(props: any) {
         src: cover,
       }}
     >
-      <div className='space-y-4 lg:space-y-8 container'>
-        {props.postList.map((post) => (
-          <BlogPostCard key={post.id} {...post} />
-        ))}
+      <div className='w-full'>
+        <div className='space-y-4 lg:space-y-8 container'>
+          {props.postList.map((post) => (
+            <BlogPostCard key={post.id} {...post} />
+          ))}
+        </div>
+        <Pagination
+          currentPage={props.currentPage}
+          totalPages={props.totalPages}
+        />
       </div>
-      <Pagination
-        currentPage={props.currentPage}
-        totalPages={props.totalPages}
-      />
     </Layout>
   )
 }
