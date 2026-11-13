@@ -16,7 +16,7 @@ let windowTop = 0
 
 const AvatarIcon = ({ className = '' }) => (
   <Button
-    href='/'
+    href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/`}
     color='transparent'
     size='small'
     rounded
