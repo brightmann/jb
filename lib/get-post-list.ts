@@ -90,10 +90,16 @@ export async function getPostList() {
       }
     })
     .filter(Boolean)
+    // Newest first by Published date. Published is date-only (midnight),
+    // so posts on the same day tie — break the tie by the Notion page's
+    // creation time so the most recently created comes first.
     .sort((a: any, b: any) => {
       const ta = new Date(a.date).getTime()
       const tb = new Date(b.date).getTime()
-      return tb - ta
+      if (tb !== ta) return tb - ta
+      const ca = new Date(a.block?.created_time).getTime() || 0
+      const cb = new Date(b.block?.created_time).getTime() || 0
+      return cb - ca
     })
 
   return { props, postList }
