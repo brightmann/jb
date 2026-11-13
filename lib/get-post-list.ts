@@ -83,7 +83,10 @@ export async function getPostList() {
         date,
         block,
         description,
-        url: getUrl(id),
+        // Absolute path: getCanonicalPageId returns a bare slug (e.g.
+        // "test-post"), which resolves relative to the current page.
+        // On /page/2 that wrongly became /page/test-post, so prefix "/".
+        url: `/${String(getUrl(id)).replace(/^\//, '')}`,
       }
     })
     .filter(Boolean)
