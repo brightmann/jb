@@ -17,19 +17,40 @@ class Notion extends NotionAPI {
   // single-wrapped records, so without this the collection schema lookup
   // misses, collection views are never discovered, and posts never enter
   // the site map.
+  // Notion rate-limits bursts (429) — the build fetches many pages in
+  // parallel, so a plain fetch fails the whole build on a busy day.
+  // Retry 429s with exponential backoff so the build self-heals instead
+  // of dying on three posts (seen on a local Windows build 2026-11-13).
   async fetch<T>(params: any): Promise<T> {
-    const result: any = await super.fetch({
-      ...params,
-      headers: {
-        'user-agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        ...params.headers,
-      },
-    })
-    if (result && typeof result === 'object' && result.recordMap) {
-      normalizeRecordMap(result.recordMap)
+    const maxAttempts = 5
+    let delayMs = 1000
+    for (let attempt = 1; ; attempt++) {
+      try {
+        const result: any = await super.fetch({
+          ...params,
+          headers: {
+            'user-agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            ...params.headers,
+          },
+        })
+        if (result && typeof result === 'object' && result.recordMap) {
+          normalizeRecordMap(result.recordMap)
+        }
+        return result
+      } catch (err: any) {
+        const status =
+          err?.response?.statusCode ?? err?.statusCode ?? err?.status
+        const is429 =
+          status === 429 || String(err?.message ?? '').includes('429')
+        if (!is429 || attempt >= maxAttempts) throw err
+        console.warn(
+          `Notion 429 — retrying fetch in ${delayMs}ms (attempt ${attempt}/${maxAttempts})`
+        )
+        await new Promise((resolve) => setTimeout(resolve, delayMs))
+        delayMs *= 2
+      }
     }
-    return result
   }
 
   async getNavigationLinkPages() {
