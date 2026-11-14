@@ -21,9 +21,12 @@ class Notion extends NotionAPI {
   // parallel, so a plain fetch fails the whole build on a busy day.
   // Retry 429s with exponential backoff so the build self-heals instead
   // of dying on three posts (seen on a local Windows build 2026-11-13).
+  // Jitter matters: several fetches hit 429 at once, and without it they
+  // retry in lockstep and keep colliding (thundering herd) — the 5-attempt
+  // version still failed on a Windows build for exactly this reason.
   async fetch<T>(params: any): Promise<T> {
-    const maxAttempts = 5
-    let delayMs = 1000
+    const maxAttempts = 8
+    let delayMs = 2000
     for (let attempt = 1; ; attempt++) {
       try {
         const result: any = await super.fetch({
@@ -44,10 +47,14 @@ class Notion extends NotionAPI {
         const is429 =
           status === 429 || String(err?.message ?? '').includes('429')
         if (!is429 || attempt >= maxAttempts) throw err
+        // Spread concurrent retries: base delay doubles (2s, 4s, 8s, ...)
+        // plus up to 1s of random jitter so simultaneous 429s don't retry
+        // in lockstep and hit the limit together again.
+        const waitMs = delayMs + Math.floor(Math.random() * 1000)
         console.warn(
-          `Notion 429 — retrying fetch in ${delayMs}ms (attempt ${attempt}/${maxAttempts})`
+          `Notion 429 — retrying fetch in ${waitMs}ms (attempt ${attempt}/${maxAttempts})`
         )
-        await new Promise((resolve) => setTimeout(resolve, delayMs))
+        await new Promise((resolve) => setTimeout(resolve, waitMs))
         delayMs *= 2
       }
     }
