@@ -76,7 +76,7 @@ export const NavBar = ({ breadcrumbs = [], showNav, setShowNav }) => {
       navigationLinks
         ?.map(({ icon, url, title }, index) => (
           <Button
-            href={url}
+            href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}${url}`}
             key={index}
             color='transparent'
             size='small'
